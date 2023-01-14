@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from flask import Flask,render_template,jsonify,make_response,request,json, redirect
 import time
 import requests
-from communicateWithS3 import communicateWithS3
+from model.communicateWithS3 import communicateWithS3
 from flask_cors import CORS
 import uuid
 
