@@ -12,7 +12,6 @@ class communicateWithS3():
     AWS_ACCESS_KEY_ID=os.getenv("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY=os.getenv("AWS_SECRET_ACCESS_KEY")
     S3_BUCKET_NAME=os.getenv("S3_BUCKET_NAME")
-    bucket = S3_BUCKET_NAME
 
     def __init__(self):
         # 建立 S3 资源
@@ -21,12 +20,12 @@ class communicateWithS3():
                     aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY)
 
     def uploadImage(self,imageName,imageBody):
-        self.s3.Bucket(self.bucket).upload_fileobj(imageBody, imageName,ExtraArgs={'ContentType': 'image/jpeg','ACL':'public-read'})
+        self.s3.Bucket(self.S3_BUCKET_NAME).upload_fileobj(imageBody, imageName,ExtraArgs={'ContentType': 'image/jpeg','ACL':'public-read'})
     
     def showAllObjectInS3(self):
         # 回傳在S3的所有物件名字
         AllObjectInS3=[]  
-        for obj in boto3.resource('s3').Bucket(self.bucket).objects.all():
+        for obj in boto3.resource('s3').Bucket(self.S3_BUCKET_NAME).objects.all():
             AllObjectInS3.append(obj.key)
         return AllObjectInS3
         
