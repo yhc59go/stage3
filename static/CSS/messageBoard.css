@@ -22,10 +22,8 @@
     border-bottom-width:1px;
 }
 .messageContent .imgContent{
-    width:200px;
-    height:200px;
     background-image: url('../images/kk.jpg');
-    background-size: cover;
+    background-size: 100% 100%;
     margin-bottom: 10px;
 }
 
