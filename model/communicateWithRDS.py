@@ -58,3 +58,19 @@ class communicateWithRDS():
             cursor.close()
             connection.close()
         return count 
+    
+    def GetAllData_messageBoard(self):
+        try:
+            connection = self.cnx_pool.get_connection() #get connection from connect pool
+            cursor = connection.cursor()
+            sql ="select * from messageBoard;"
+            cursor.execute(sql)
+            myresult = cursor.fetchall()
+            return myresult
+        except Exception as e:
+            print(e)
+        finally: # must close cursor and conn!!
+            cursor.close()
+            connection.close()
+        return -1
+        

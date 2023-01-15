@@ -29,16 +29,21 @@ pool_name=os.getenv("pool_name")
 def index():
 	return render_template("messageBoard.html")
 
-@app.route('/api/user/image', methods=['POST'])
-def handle_upload_image():
+@app.route('/api/messageBoard/content', methods=['POST'])
+def handle_upload_content():
 	textFromUser = request.form['text']
 	image = request.files["image"]
 	if image.content_type=="image/jpeg":
 		# put image to s3, and get url of image with cloudfrond
 		# put url of image and text to database
 		imageName = str(uuid.uuid4()) + ".jpeg"
-		s3Instance=communicateWithS3()
-		s3Instance.uploadImage(imageName,image)
+		try:
+			s3Instance=communicateWithS3()
+			s3Instance.uploadImage(imageName,image)
+		except Exception as e:
+			response = make_response(jsonify({"error":True,"message":"Can't upload to database."} ),500 )   
+			response.headers["Content-Type"] = "application/json"
+			return response
 		urlOfImage=CLOUDFRONT_BASE_URL+imageName
 		#Store data to database
 		databasePoolInstance=communicateWithRDS(databaseName,pool_name)
@@ -51,4 +56,21 @@ def handle_upload_image():
 	response.headers["Content-Type"] = "application/json"
 	return response
 
+@app.route('/api/messageBoard/content', methods=['GET'])
+def handle_get_contentFromRDS():
+	#Get data from database
+	try:
+		databasePoolInstance=communicateWithRDS(databaseName,pool_name)
+		contentFromRDS=databasePoolInstance.GetAllData_messageBoard()
+	except Exception as e:
+		response = make_response(jsonify({"error":True,"message":"communicate to database failed."} ),500 )   
+		response.headers["Content-Type"] = "application/json"
+		return response
+	if contentFromRDS==-1:
+		response = make_response(jsonify({"error":True,"message":"communicate to database failed."} ),500 )   
+		response.headers["Content-Type"] = "application/json"
+		return response
+	response = make_response(jsonify({"data":contentFromRDS} ),200 )   
+	response.headers["Content-Type"] = "application/json"
+	return response
 app.run(host="0.0.0.0",port=2000)
