@@ -19,7 +19,7 @@ app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 app.config['ALLOWED_EXTENSIONS'] = set(['jpg', 'jpeg', 'png'])
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-CLOUDFRONT_BASE_URL = "https://myawss3bucket20230110.s3.us-west-2.amazonaws.com/"
+CLOUDFRONT_BASE_URL = "https://d32b64oy38dzl7.cloudfront.net/"
 
 load_dotenv()
 databaseName=os.getenv("databaseName")
@@ -73,4 +73,4 @@ def handle_get_contentFromRDS():
 	response = make_response(jsonify({"data":contentFromRDS} ),200 )   
 	response.headers["Content-Type"] = "application/json"
 	return response
-app.run(host="0.0.0.0",port=2000)
+app.run(host="0.0.0.0",port=3200)
