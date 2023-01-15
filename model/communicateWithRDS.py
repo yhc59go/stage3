@@ -53,6 +53,7 @@ class communicateWithRDS():
             connection.commit()
         except Exception as e:
             print(e)
+            count=-1
         finally: # must close cursor and conn!!
             cursor.close()
             connection.close()
