@@ -5,6 +5,7 @@ from flask import Flask,render_template,jsonify,make_response,request,json, redi
 import time
 import requests
 from model.communicateWithS3 import communicateWithS3
+from model.communicateWithRDS import communicateWithRDS
 from flask_cors import CORS
 import uuid
 
@@ -20,6 +21,9 @@ app.config['ALLOWED_EXTENSIONS'] = set(['jpg', 'jpeg', 'png'])
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 CLOUDFRONT_BASE_URL = "https://myawss3bucket20230110.s3.us-west-2.amazonaws.com/"
 
+load_dotenv()
+databaseName=os.getenv("databaseName")
+pool_name=os.getenv("pool_name")
 
 @app.route("/")
 def index():
@@ -37,7 +41,9 @@ def handle_upload_image():
 		s3Instance.uploadImage(imageName,image)
 		urlOfImage=CLOUDFRONT_BASE_URL+imageName
 		#Store data to database
-
+		databasePoolInstance=communicateWithRDS(databaseName,pool_name)
+		databasePoolInstance.InsertToTabel_messageBoard(textFromUser,urlOfImage)
+		
 		response = make_response(jsonify({"ok":True}),200 )   
 		response.headers["Content-Type"] = "application/json"
 		return response
@@ -45,4 +51,4 @@ def handle_upload_image():
 	response.headers["Content-Type"] = "application/json"
 	return response
 
-app.run(host="0.0.0.0",port=3000)
+app.run(host="0.0.0.0",port=2000)
