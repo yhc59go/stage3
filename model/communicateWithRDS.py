@@ -32,7 +32,7 @@ class communicateWithRDS():
             # 建立 cursor
             cursor = connection.cursor()
             # 建立資料表
-            table = "CREATE TABLE messageBoard (message_content TEXT, image TEXT)"
+            table = "CREATE TABLE messageBoard (id bigint PRIMARY KEY AUTO_INCREMENT,message_content TEXT, image TEXT)"
             cursor.execute(table)
         except Exception as e:
             print(e)
