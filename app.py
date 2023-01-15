@@ -20,8 +20,10 @@ app.config["TEMPLATES_AUTO_RELOAD"]=True
 app.config['ALLOWED_EXTENSIONS'] = set(['jpg', 'jpeg', 'png'])
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 CLOUDFRONT_BASE_URL = "https://myawss3bucket20230110.s3.us-west-2.amazonaws.com/"
-databaseName="week1_stage3"
-pool_name="pool_name"
+
+load_dotenv()
+databaseName=os.getenv("databaseName")
+pool_name=os.getenv("pool_name")
 
 @app.route("/")
 def index():
