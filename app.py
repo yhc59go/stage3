@@ -49,4 +49,4 @@ def handle_upload_image():
 	response.headers["Content-Type"] = "application/json"
 	return response
 
-app.run(host="0.0.0.0",port=3000)
+app.run(host="0.0.0.0",port=2000)
