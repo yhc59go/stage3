@@ -21,7 +21,7 @@
     border-bottom-style:solid; 
     border-bottom-width:1px;
 }
-.messageContent #imgContent{
+.messageContent .imgContent{
     width:200px;
     height:200px;
     background-image: url('../images/kk.jpg');
@@ -29,7 +29,7 @@
     margin-bottom: 10px;
 }
 
-.messageContent #textContent{
+.messageContent .textContent{
     margin-top: 15px;
 }
 #messageBoardArea #selectionArea{
