@@ -46,7 +46,7 @@ class communicateWithRDS():
         try:
             connection = self.cnx_pool.get_connection() #get connection from connect pool
             cursor = connection.cursor()
-            sql ="INSERT INTO messageBoar(message_content,imageURL)VALUES (%s, %s);"
+            sql ="INSERT INTO messageBoard(message_content,image)VALUES (%s, %s);"
             val=(message_text,message_imageURL) 
             cursor.execute(sql,val)
             count = cursor.rowcount
