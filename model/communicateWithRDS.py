@@ -63,7 +63,7 @@ class communicateWithRDS():
         try:
             connection = self.cnx_pool.get_connection() #get connection from connect pool
             cursor = connection.cursor()
-            sql ="select * from messageBoard;"
+            sql ="select * from messageBoard ORDER BY id asc;"
             cursor.execute(sql)
             myresult = cursor.fetchall()
             return myresult

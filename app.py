@@ -31,30 +31,38 @@ def index():
 
 @app.route('/api/messageBoard/content', methods=['POST'])
 def handle_upload_content():
+	urlOfImage=""
 	textFromUser = request.form['text']
-	image = request.files["image"]
-	if image.content_type=="image/jpeg":
-		# put image to s3, and get url of image with cloudfrond
-		# put url of image and text to database
-		imageName = str(uuid.uuid4()) + ".jpeg"
-		try:
-			s3Instance=communicateWithS3()
-			s3Instance.uploadImage(imageName,image)
-		except Exception as e:
-			response = make_response(jsonify({"error":True,"message":"Can't upload to database."} ),500 )   
-			response.headers["Content-Type"] = "application/json"
-			return response
-		urlOfImage=CLOUDFRONT_BASE_URL+imageName
-		#Store data to database
-		databasePoolInstance=communicateWithRDS(databaseName,pool_name)
-		databasePoolInstance.InsertToTabel_messageBoard(textFromUser,urlOfImage)
+	if 'image' in request.files:
+		image = request.files["image"]
+		if(image):
+			if image.content_type=="image/jpeg":
+				# put image to s3, and get url of image with cloudfrond
+				# put url of image and text to database
+				imageName = str(uuid.uuid4()) + ".jpeg"
+				try:
+					s3Instance=communicateWithS3()
+					s3Instance.uploadImage(imageName,image)
+				except Exception as e:
+					response = make_response(jsonify({"error":True,"message":"Can't upload to database."} ),500 )   
+					response.headers["Content-Type"] = "application/json"
+					return response
+				urlOfImage=CLOUDFRONT_BASE_URL+imageName
 		
-		response = make_response(jsonify({"ok":True}),200 )   
+	#Store data to database
+	try:
+		databasePoolInstance=communicateWithRDS(databaseName,pool_name)
+		result=databasePoolInstance.InsertToTabel_messageBoard(textFromUser,urlOfImage)
+	except Exception as e:
+		response = make_response(jsonify({"error":True,"message":"Can't store data to database."} ),500 )   
 		response.headers["Content-Type"] = "application/json"
 		return response
-	response = make_response(jsonify({"error":True,"message":"Can't store data to database."} ),400 )   
+ 
+	response = make_response(jsonify({"ok":True}),200 )   
 	response.headers["Content-Type"] = "application/json"
 	return response
+
+	
 
 @app.route('/api/messageBoard/content', methods=['GET'])
 def handle_get_contentFromRDS():
